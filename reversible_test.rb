@@ -28,7 +28,7 @@ end
 def valid_moves_exist?(player)
   (0...BOARD_SIZE).each do |y|
     (0...BOARD_SIZE).each do |x|
-      return true if !valid_move?(x, y, player)
+      return true if valid_move?(x, y, player)
     end
   end
 
@@ -178,8 +178,6 @@ initialize_game
 
 screen_point = 0
 
-#Window.box_fill(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, [0, 128, 0])
-
 Window.loop do
   # 画面をクリアにする
   Window.draw_box_fill(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, [0, 128, 0])
@@ -216,17 +214,6 @@ Window.loop do
 
   if screen_point == 1
     game_over
-  end
-
-  # 指定されたプレーヤーに有効な手があるかどうかをチェック
-  def valid_moves_exist?(player)
-    (0...BOARD_SIZE).each do |y|
-      (0...BOARD_SIZE).each do |x|
-        return true if valid_move?(x, y, player)
-      end
-    end
-
-    return false
   end
 
   # ウィンドウをアップデート
