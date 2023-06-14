@@ -164,9 +164,14 @@ def draw_cell(x, y, cell)
 
 end
 
+# def pass(player)
+#   font = Font.new(48)
+#   Window.draw_font(WINDOW_WIDTH / 2 - 125, WINDOW_HEIGHT / 2 - 24, "#{player}をパス", font,[255,0,0])
+# end
+
 def game_over
   font = Font.new(48)
-  Window.draw_font(WINDOW_WIDTH / 2 - 125, WINDOW_HEIGHT / 2 - 24, "Game Over!!", font)
+  Window.draw_font(WINDOW_WIDTH / 2 - 125, WINDOW_HEIGHT / 2 - 24, "Game Over!!", font, color: [255, 0, 0])
 end
 
 # ゲームの Main loop
@@ -177,8 +182,6 @@ Window.bgcolor = [255,0,128,0]
 initialize_game
 
 screen_point = 0
-
-#Window.box_fill(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, [0, 128, 0])
 
 Window.loop do
   # 画面をクリアにする
@@ -201,32 +204,30 @@ Window.loop do
       # 相手の駒を裏返す
       flip_pieces(x, y, @current_player)
 
+      # switch_player
+
       # 有効な手があれば次のプレイヤーに交代
       if valid_moves_exist?(@current_player)
         switch_player
       elsif valid_moves_exist?(@current_player == :black ? :white : :black)
         switch_player
-        puts "#{@current_player}に有効な手がありません! 手番をスキップします。"
       else
         screen_point = 1
         puts "Game Over!"
+      end
+    else
+      # 有効な手があれば次のプレイヤーに交代
+      if valid_moves_exist?(@current_player)
+        switch_player
+      elsif valid_moves_exist?(@current_player == :black ? :white : :black)
+        puts "#{@current_player}に有効な手がありません! 手番をスキップします。"
+        switch_player
       end
     end
   end
 
   if screen_point == 1
     game_over
-  end
-
-  # 指定されたプレーヤーに有効な手があるかどうかをチェック
-  def valid_moves_exist?(player)
-    (0...BOARD_SIZE).each do |y|
-      (0...BOARD_SIZE).each do |x|
-        return true if valid_move?(x, y, player)
-      end
-    end
-
-    return false
   end
 
   # ウィンドウをアップデート
