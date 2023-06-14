@@ -28,7 +28,7 @@ end
 def valid_moves_exist?(player)
   (0...BOARD_SIZE).each do |y|
     (0...BOARD_SIZE).each do |x|
-      return true if valid_move?(x, y, player)
+      return true if !valid_move?(x, y, player)
     end
   end
 
@@ -139,26 +139,34 @@ end
 def draw_cell(x, y, cell)
   x_pos = x * CELL_SIZE
   y_pos = y * CELL_SIZE
-
+  radius = CELL_SIZE/2
+  x_cen_pos = x_pos + radius
+  y_cen_pos = y_pos + radius
+  
   case cell
   when :black
-    color_1 = [0, 0, 0]
-    color_2 = [0, 0, 0]
+    color_1 = [0,128,64]
+    color_2 = [40, 220, 240]
+    color_3 = [0, 0, 0]
   when :white
-    color_1 = [255, 255, 255]
-    color_2 = [255, 255, 255]
+    color_1 = [0,128,64]
+    color_2 = [40, 220, 240]
+    color_3 = [255, 255, 255]
   else
     color_1 = [0,128,64]
     color_2 = [40, 220, 240]
+    color_3 = [0,128,64]
   end
 
   Window.draw_box_fill(x_pos, y_pos, x_pos + CELL_SIZE, y_pos + CELL_SIZE, color_1)
   Window.draw_box(x_pos, y_pos, x_pos + CELL_SIZE, y_pos + CELL_SIZE, color_2)
+  Window.draw_circle_fill(x_cen_pos,y_cen_pos,radius,color_3)
+
 end
 
 def game_over
   font = Font.new(48)
-  Window.draw_font(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2 - 24, "Game Over!!", font)
+  Window.draw_font(WINDOW_WIDTH / 2 - 125, WINDOW_HEIGHT / 2 - 24, "Game Over!!", font)
 end
 
 # ゲームの Main loop
@@ -221,7 +229,7 @@ Window.loop do
     return false
   end
 
-  # Update the window
-  Window.update
+  # ウィンドウをアップデート
+  #Window.update
 end
     
