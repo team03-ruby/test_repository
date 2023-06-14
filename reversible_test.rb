@@ -24,31 +24,6 @@ def initialize_game
   @current_player = :black
 end
 
-# マウス入力
-if Input.mouse_push?(M_LBUTTON)
-  # マウス位置からセル座標を算出
-  x = Input.mouse_pos_x / CELL_SIZE
-  y = Input.mouse_pos_y / CELL_SIZE
-
-  # 選択されたセルが現在のプレーヤーに対して有効かどうかをチェック
-  if valid_move?(x, y, @current_player)
-    # 選択したセルに駒を置く
-    place_piece(x, y, @current_player)
-
-    # 相手の駒を裏返す
-    flip_pieces(x, y, @current_player)
-
-    # 次のプレーヤーに切り替える
-    switch_player
-
-    # 現在のプレイヤーに有効な手があるかどうかをチェック
-    if !valid_moves_exist?(@current_player)
-      switch_player
-      puts "No valid moves for #{@current_player}! Skipping turn."
-    end
-  end
-end
-
 # 指定されたプレーヤーに有効な手があるかどうかをチェック
 def valid_moves_exist?(player)
   (0...BOARD_SIZE).each do |y|
@@ -164,26 +139,34 @@ end
 def draw_cell(x, y, cell)
   x_pos = x * CELL_SIZE
   y_pos = y * CELL_SIZE
-
+  radius = CELL_SIZE/2
+  x_cen_pos = x_pos + radius
+  y_cen_pos = y_pos + radius
+  
   case cell
   when :black
-    color_1 = [0, 0, 0]
-    color_2 = [0, 0, 0]
+    color_1 = [0,128,64]
+    color_2 = [40, 220, 240]
+    color_3 = [0, 0, 0]
   when :white
-    color_1 = [255, 255, 255]
-    color_2 = [255, 255, 255]
+    color_1 = [0,128,64]
+    color_2 = [40, 220, 240]
+    color_3 = [255, 255, 255]
   else
     color_1 = [0,128,64]
     color_2 = [40, 220, 240]
+    color_3 = [0,128,64]
   end
 
   Window.draw_box_fill(x_pos, y_pos, x_pos + CELL_SIZE, y_pos + CELL_SIZE, color_1)
   Window.draw_box(x_pos, y_pos, x_pos + CELL_SIZE, y_pos + CELL_SIZE, color_2)
+  Window.draw_circle_fill(x_cen_pos,y_cen_pos,radius,color_3)
+
 end
 
 def game_over
   font = Font.new(48)
-  Window.draw_font(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2 - 24, "Game Over", font)
+  Window.draw_font(WINDOW_WIDTH / 2 - 125, WINDOW_HEIGHT / 2 - 24, "Game Over!!", font)
 end
 
 # ゲームの Main loop
@@ -192,6 +175,8 @@ Window.height = WINDOW_HEIGHT
 Window.bgcolor = [255,0,128,0]
 
 initialize_game
+
+screen_point = 0
 
 #Window.box_fill(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, [0, 128, 0])
 
@@ -221,11 +206,16 @@ Window.loop do
         switch_player
       elsif valid_moves_exist?(@current_player == :black ? :white : :black)
         switch_player
-        puts "No valid moves for #{@current_player}! Skipping turn."
+        puts "#{@current_player}に有効な手がありません! 手番をスキップします。"
       else
+        screen_point = 1
         puts "Game Over!"
       end
     end
+  end
+
+  if screen_point == 1
+    game_over
   end
 
   # 指定されたプレーヤーに有効な手があるかどうかをチェック
@@ -239,6 +229,7 @@ Window.loop do
     return false
   end
 
-  # Update the window
-  Window.update
+  # ウィンドウをアップデート
+  #Window.update
 end
+    
