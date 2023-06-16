@@ -118,6 +118,16 @@ end
 # 次のプレーヤーに切り替える
 def switch_player
   @current_player = (@current_player == :black) ? :white : :black
+
+  # 現在の手番を表示する
+  if (@current_player == :black)
+    puts "○黒の番です。"
+    puts ""
+  else
+    puts "●白の番です。"
+    puts ""
+  end
+
 end
 
 # 座標がゲームボード内にあるかどうかをチェック
@@ -195,12 +205,23 @@ pass_point = 0
 
 count_point = 0
 
+# 最初に表示するための変数
+count = 0
+
+
 Window.loop do
   # 画面をクリアにする
   Window.draw_box_fill(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, [0, 128, 0])
 
   # ゲームボードを描く
   draw_board
+
+  # 黒から始まることを表示する
+  if (count == 0)
+    puts "○黒の番です。"
+    puts ""
+    count = 1
+  end
 
   # クリック入力
   if Input.mouse_push?(M_LBUTTON)
