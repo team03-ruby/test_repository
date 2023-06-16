@@ -1,12 +1,12 @@
 require 'dxruby'
 
 # 盤の設定
-WINDOW_WIDTH = 400
-#WINDOW_WIDTH = 600
+#WINDOW_WIDTH = 400
+WINDOW_WIDTH = 600
 WINDOW_HEIGHT = 400
 BOARD_SIZE = 8
-CELL_SIZE = WINDOW_WIDTH / BOARD_SIZE
-#CELL_SIZE = (WINDOW_WIDTH - 200) / BOARD_SIZE
+#CELL_SIZE = WINDOW_WIDTH / BOARD_SIZE
+CELL_SIZE = (WINDOW_WIDTH - 200) / BOARD_SIZE
 BOARD_OFFSET_X = 100
 
 # ゲームの初期化
@@ -175,8 +175,14 @@ def draw_cell(x, y, cell)
 end
 
 # def pass(player)
+#   # タイミングの設定
+#   start_time = Time.now + 3.0  # 3秒後の時刻を取得
+#   current_time = Time.now  # 現在の時刻を取得
+#   elapsed_time = current_time - start_time  # 現在の時刻から開始時刻を引いて経過時間を計算
 #   font = Font.new(48)
-#   Window.draw_font(WINDOW_WIDTH / 2 - 125, WINDOW_HEIGHT / 2 - 24, "#{player}をパス", font,[255,0,0])
+#   if elapsed_time < 3.0  # 経過時間が3秒未満の場合
+#     Window.draw_font(WINDOW_WIDTH / 2 - 125, WINDOW_HEIGHT / 2 - 24, "#{player}をパス", font,color: [255, 0, 0])
+#   end
 # end
 
 def game_over
@@ -193,8 +199,15 @@ initialize_game
 
 screen_point = 0
 
+start_time = 0
+
+pass_point = 0
+
+count_point = 0
+
 # 最初に表示するための変数
 count = 0
+
 
 Window.loop do
   # 画面をクリアにする
@@ -228,11 +241,29 @@ Window.loop do
       if valid_moves_exist?(@current_player == :black ? :white : :black)
         switch_player
       elsif valid_moves_exist?(@current_player)
+        count_point = 1
+        pass_point = 1
         puts "#{@current_player == :black ? :white : :black}に有効な手がありません! 手番をスキップします。"
       else
         screen_point = 1
         puts "Game Over!"
       end
+    end
+  end
+
+  if pass_point == 1
+    # タイミングの設定
+    if count_point == 1
+    start_time = Time.now # 3秒後の時刻を取得
+    end
+    count_point = 0
+    current_time = Time.now  # 現在の時刻を取得
+    elapsed_time = current_time - start_time  # 現在の時刻から開始時刻を引いて経過時間を計算
+    font = Font.new(48)
+    if elapsed_time < 3.0  # 経過時間が3秒未満の場合
+      Window.draw_font(WINDOW_WIDTH / 2 - 125, WINDOW_HEIGHT / 2 - 24, "#{@current_player == :black ? :white : :black}をパス", font,color: [255, 0, 0])
+    else
+      pass_point = 0
     end
   end
 
