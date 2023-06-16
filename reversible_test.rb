@@ -204,24 +204,14 @@ Window.loop do
       # 相手の駒を裏返す
       flip_pieces(x, y, @current_player)
 
-      # switch_player
-
       # 有効な手があれば次のプレイヤーに交代
-      if valid_moves_exist?(@current_player)
+      if valid_moves_exist?(@current_player == :black ? :white : :black)
         switch_player
-      elsif valid_moves_exist?(@current_player == :black ? :white : :black)
-        switch_player
+      elsif valid_moves_exist?(@current_player)
+        puts "#{@current_player == :black ? :white : :black}に有効な手がありません! 手番をスキップします。"
       else
         screen_point = 1
         puts "Game Over!"
-      end
-    else
-      # 有効な手があれば次のプレイヤーに交代
-      if valid_moves_exist?(@current_player)
-        switch_player
-      elsif valid_moves_exist?(@current_player == :black ? :white : :black)
-        puts "#{@current_player}に有効な手がありません! 手番をスキップします。"
-        switch_player
       end
     end
   end
