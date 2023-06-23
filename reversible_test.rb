@@ -1,12 +1,12 @@
 require 'dxruby'
 
 # 盤の設定
-WINDOW_WIDTH = 400
-#WINDOW_WIDTH = 600
+#WINDOW_WIDTH = 400
+WINDOW_WIDTH = 600
 WINDOW_HEIGHT = 400
 BOARD_SIZE = 8
-CELL_SIZE = WINDOW_WIDTH / BOARD_SIZE
-#CELL_SIZE = (WINDOW_WIDTH - 200) / BOARD_SIZE
+#CELL_SIZE = WINDOW_WIDTH / BOARD_SIZE
+CELL_SIZE = (WINDOW_WIDTH - 200) / BOARD_SIZE
 BOARD_OFFSET_X = 100
 
 # ゲームの初期化
@@ -205,6 +205,10 @@ pass_point = 0
 
 count_point = 0
 
+time_start = time_current = Time.now
+time_current = 0
+font_A = Font.new(48)
+
 # 最初に表示するための変数
 count = 0
 
@@ -270,6 +274,13 @@ Window.loop do
   if screen_point == 1
     game_over
   end
+
+  time_current = Time.now
+  time_count = time_current - time_start
+  minutes = time_count / 60
+  seconds = time_count % 60
+  time_text = sprintf("%02d:%02d", minutes, seconds)
+  Window.draw_font(460, 50, time_text, font_A)
 
   # ウィンドウをアップデート
   #Window.update
